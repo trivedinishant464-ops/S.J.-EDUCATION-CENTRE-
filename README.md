@@ -1,32 +1,57 @@
-name: Build Android APK
 
-on:
-  workflow_dispatch:
+# S.J EDUCATION CENTRE — Complete School App
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+This is a fresh full-stack school management app project.
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+## Important: You become the Super Admin
+On the first launch, there is no admin account. The first setup screen asks for:
+- Your name
+- Your Admin ID
+- Your password (minimum 8 characters)
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
+That account is the only initial `admin` account.
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+After setup you can create:
+- Student IDs/passwords
+- Parent IDs/passwords
+- Teacher IDs/passwords
+- Reset passwords
+- Enable/disable accounts
 
-      - name: Build APK
-        run: |
-          chmod +x gradlew
-          ./gradlew assembleDebug
+## Included
+- Node.js + Express backend
+- SQLite database
+- Password hashing with bcrypt
+- Session-based login
+- Role-based authorization
+- Admin panel
+- Notice management
+- Homework management
+- Attendance
+- Timetable database/API
+- Fees database/API
+- Results database/API
+- Installable PWA shell
+- Your supplied S.J EDUCATION CENTRE logo
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: SJ-Education-Centre-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+## Run
+1. Install Node.js 18+.
+2. Open a terminal in this folder.
+3. Run:
+   npm install
+4. Run:
+   npm start
+5. Open:
+   http://localhost:3000
+
+## Production
+For a real public school deployment:
+- Set a strong SESSION_SECRET environment variable.
+- Use HTTPS.
+- Put the app behind a production reverse proxy.
+- Back up `school.db`.
+- Add a real cloud database if many simultaneous users are expected.
+- Configure secure cookies (`secure:true`) when HTTPS is enabled.
+- Add a dedicated domain and Android/iOS store build if required.
+
+The source is intentionally built so the first-run admin setup is controlled by you rather than shipping a public default admin password.
