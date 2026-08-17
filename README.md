@@ -55,3 +55,99 @@ For a real public school deployment:
 - Add a dedicated domain and Android/iOS store build if required.
 
 The source is intentionally built so the first-run admin setup is controlled by you rather than shipping a public default admin password.
+## 🚀 School App Features
+
+### 📊 Data Management
+- Excel Import
+- Excel Export
+- PDF Export
+- PDF Print
+- CSV Import/Export
+- Bulk Student Import
+- Bulk Teacher Import
+- Backup & Restore
+
+### 👨‍🎓 Student Management
+- Student Registration
+- Student Profile
+- Student ID
+- Class & Section
+- Parent Details
+- Student Photo
+- Student ID Card
+- Student Search & Filter
+
+### 👨‍🏫 Teacher & Staff
+- Teacher Management
+- Staff Management
+- Teacher Attendance
+- Staff Attendance
+- Leave Management
+- Salary/Payroll
+
+### 📝 Attendance
+- Student Attendance
+- Teacher Attendance
+- Daily/Monthly Reports
+- Present/Absent/Late
+- Attendance PDF & Excel Report
+
+### 💰 Fees Management
+- Fee Structure
+- Fee Collection
+- Paid/Pending Fees
+- Fee Receipt PDF
+- Fee Reports
+- Excel Export
+
+### 📚 Homework & Study
+- Homework
+- Assignments
+- Study Material
+- Class-wise Content
+
+### 📅 Timetable
+- Class Timetable
+- Teacher Timetable
+- Subject Management
+
+### 📝 Exam & Results
+- Exam Management
+- Marks Entry
+- Automatic Grade Calculation
+- Result Generation
+- Report Card PDF
+- Result Excel Export
+
+### 📢 Communication
+- Notice Board
+- School Announcements
+- Events
+- Holidays
+- Notifications
+
+### 🔐 User & Security
+- Super Admin
+- Admin
+- Teacher
+- Parent
+- Student
+- Role-based Permissions
+- Password Reset
+- Enable/Disable Accounts
+
+### ⚙️ Admin Panel
+- School Name Editing
+- School Logo Editing
+- Session Management
+- Class & Section Management
+- Subject Management
+- User Management
+- Database Backup & Restore
+
+### 📱 App
+- Mobile Responsive Design
+- Installable PWA
+- Search & Filters
+- Dashboard
+- Print Support
