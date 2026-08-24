@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>S.J EDUCATION CENTRE</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#f3f6fb;color:#172033}
+header{background:#172554;color:white;padding:18px;text-align:center}
+header h1{margin:0;font-size:23px}header p{margin:5px 0 0}
+nav{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:white;box-shadow:0 2px 8px #bbb}
+button{border:0;border-radius:7px;padding:10px 14px;background:#1d4ed8;color:white;cursor:pointer}
+button:hover{opacity:.85}.danger{background:#dc2626}.green{background:#15803d}.orange{background:#ea580c}
+main{padding:18px;max-width:1200px;margin:auto}.card{background:white;border-radius:12px;padding:18px;margin-bottom:15px;box-shadow:0 2px 10px #d5dbea}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.stat{font-size:28px;font-weight:bold}.muted{color:#64748b}
+input,select{padding:11px;border:1px solid #cbd5e1;border-radius:7px;width:100%;margin:5px 0}
+table{width:100%;border-collapse:collapse;background:white}th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left}
+.hidden{display:none}.login{max-width:420px;margin:60px auto}.menu button{margin:4px}
+.badge{padding:5px 8px;border-radius:15px;background:#dbeafe;color:#1e40af}
+@media(max-width:600px){main{padding:10px}table{font-size:13px}}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🏫 S.J EDUCATION CENTRE</h1>
+<p>School Management System</p>
+</header>
+
+<div id="login" class="login card">
+<h2>🔐 Login</h2>
+<input id="user" placeholder="Username" value="principal">
+<input id="pass" type="password" placeholder="Password" value="admin123">
+<button onclick="login()">Login</button>
+<p class="muted">Principal: principal / admin123</p>
+</div>
+
+<div id="app" class="hidden">
+<nav class="menu">
+<button onclick="show('dashboard')">🏠 Dashboard</button>
+<button onclick="show('students')">👨‍🎓 Students</button>
+<button onclick="show('staff')">👨‍🏫 Staff</button>
+<button onclick="show('attendance')">📋 Attendance</button>
+<button onclick="show('fees')">💰 Fees</button>
+<button onclick="show('results')">📝 Results</button>
+<button onclick="show('notices')">📢 Notices</button>
+<button onclick="show('reports')">📊 Reports</button>
+<button onclick="show('principal')">👤 Principal Profile</button><button onclick="show('settings')">⚙️ Settings</button>
+<button class="danger" onclick="location.reload()">Logout</button>
+</nav>
+
+<main id="content"></main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js">
+function exportClassExcel(){
+let selected=document.getElementById('exportClass').value;
+
+if(!selected){
+alert('Please select a class first');
+return;
+}
+
+let list=students.filter(s=>String(s.cls).trim()===String(selected).trim());
+
+if(list.length===0){
+alert('Is class ke students nahi mile');
+return;
+}
+
+let data=list.map((s,i)=>({
+"S.No":i+1,
+"Student Name":s.name,
+"Roll No":s.roll,
+"Class":s.cls,
+"Father Name":s.father,
+"Mobile":s.phone
+}));
+
+let ws=XLSX.utils.json_to_sheet(data);
+let wb=XLSX.utils.book_new();
+
+XLSX.utils.book_append_sheet(wb,ws,"Students");
+
+let safe=selected.replace(/[\/\\:*?"<>|]/g,"-");
+
+XLSX.writeFile(
+wb,
+"SJ_Education_Centre_Class_"+safe+".xlsx"
+);
+
+alert(list.length+' Students exported successfully');
+}
+
+function loadExportClasses(){
+let select=document.getElementById('exportClass');
+if(!select)return;
+
+let classes=[...new Set(
+students.map(s=>String(s.cls).trim()).filter(Boolean)
+)].sort();
+
+select.innerHTML='<option value="">Select Class</option>';
+
+classes.forEach(cl=>{
+let option=document.createElement('option');
+option.value=cl;
+option.textContent=cl;
+select.appendChild(option);
+});
+}
+
+</script>
+<script>
+let students=JSON.parse(localStorage.students||'[]');
+let staff=JSON.parse(localStorage.staff||'[]');
+let fees=JSON.parse(localStorage.fees||'[]');
+let results=JSON.parse(localStorage.results||'[]');
+let attendance=JSON.parse(localStorage.attendance||'[]');
+let notices=JSON.parse(localStorage.notices||'[]');
+
+function save(){
+localStorage.students=JSON.stringify(students);
+localStorage.staff=JSON.stringify(staff);
+localStorage.fees=JSON.stringify(fees);
+localStorage.results=JSON.stringify(results);
+localStorage.attendance=JSON.stringify(attendance);
+localStorage.notices=JSON.stringify(notices);
+}
+
+function login(){
+if(user.value==='principal'&&pass.value==='admin123'){
+localStorage.setItem('schoolLoggedIn','true');
+localStorage.setItem('schoolLoggedIn','true');
+document.getElementById('login').classList.add('hidden');
+document.getElementById('app').classList.remove('hidden');
+show('dashboard');
+}else alert('Wrong Login');
+}
+
+function show(page){
+localStorage.setItem('schoolPage',page);
+localStorage.setItem('schoolPage',page);
+let c=document.getElementById('content');
+
+if(page==='dashboard'){
+c.innerHTML=`
+<div class="card"><h2>📊 School Dashboard</h2>
+<div class="grid">
+<div class="card"><div class="stat">${students.length}</div>Students</div>
+<div class="card"><div class="stat">${staff.length}</div>Staff</div>
+<div class="card"><div class="stat">${fees.length}</div>Fee Records</div>
+<div class="card"><div class="stat">${results.length}</div>Results</div>
+</div>
+</div>
+<div class="card"><h3>Quick Actions</h3>
+<button onclick="show('students')">Add Student</button>
+<button onclick="show('staff')">Add Staff</button>
+<button onclick="show('attendance')">Mark Attendance</button>
+<button onclick="show('fees')">Add Fee</button>
+<button onclick="show('results')">Add Result</button>
+</div>`;
+}
+
+if(page==='students'){
+setTimeout(loadExportClasses,50);
+c.innerHTML=`
+<div class="card"><h2>👨‍🎓 Student Management</h2>
+<div class="grid">
+<input id="sn" placeholder="Student Name">
+<input id="roll" placeholder="Roll No">
+<input id="cls" placeholder="Class">
+<input id="father" placeholder="Father Name">
+<input id="phone" placeholder="Mobile">
+</div>
+<button class="green" onclick="addStudent()">+ Add Student</button>
+<button onclick="importStudents()">📥 Import CSV/Excel Data</button>
+<button onclick="downloadStudents()">📤 Export CSV</button>
+<select id="exportClass" style="max-width:220px">
+<option value="">Select Class</option>
+</select>
+<button class="green" onclick="exportClassExcel()">📊 Export Class Excel</button>
+</div>
+<div class="card"><table><thead><tr><th>Name</th><th>Roll</th><th>Class</th><th>Father</th><th>Mobile</th><th>Action</th></tr></thead>
+<tbody>${students.map((s,i)=>`<tr><td>${s.name}</td><td>${s.roll}</td><td>${s.cls}</td><td>${s.father}</td><td>${s.phone}</td><td><button class="danger" onclick="delStudent(${i})">Delete</button></td></tr>`).join('')}</tbody></table></div>`;
+}
+
+if(page==='staff'){
+c.innerHTML=`
+<div class="card"><h2>👨‍🏫 Staff Management</h2>
+<div class="grid">
+<input id="stname" placeholder="Staff Name">
+<input id="role" placeholder="Designation">
+<input id="stid" placeholder="Staff Login ID">
+<input id="stpass" placeholder="Password">
+</div>
+<button class="green" onclick="addStaff()">+ Create Staff ID</button>
+</div>
+<div class="card"><table><tr><th>Name</th><th>Designation</th><th>Login ID</th><th>Password</th><th>Action</th></tr>
+${staff.map((s,i)=>`<tr><td>${s.name}</td><td>${s.role}</td><td>${s.id}</td><td>${s.pass}</td><td><button class="danger" onclick="delStaff(${i})">Delete</button></td></tr>`).join('')}</table></div>`;
+}
+
+if(page==='attendance'){
+c.innerHTML=`
+<div class="card"><h2>📋 Attendance</h2>
+<input id="adate" type="date">
+<select id="astudent">${students.map((s,i)=>`<option value="${i}">${s.name} - ${s.roll}</option>`).join('')}</select>
+<select id="astatus"><option>Present</option><option>Absent</option><option>Late</option></select>
+<button class="green" onclick="markAttendance()">Save Attendance</button>
+</div>
+<div class="card"><table><tr><th>Date</th><th>Student</th><th>Status</th></tr>
+${attendance.map(a=>`<tr><td>${a.date}</td><td>${a.name}</td><td><span class="badge">${a.status}</span></td></tr>`).join('')}</table></div>`;
+}
+
+if(page==='fees'){
+c.innerHTML=`
+<div class="card"><h2>💰 Fees Management</h2>
+<select id="fstudent">${students.map((s,i)=>`<option value="${i}">${s.name}</option>`).join('')}</select>
+<input id="amount" type="number" placeholder="Amount">
+<input id="fdate" type="date">
+<button class="green" onclick="addFee()">Save Fee</button>
+<button onclick="window.print()">🖨️ Print / PDF</button>
+</div>
+<div class="card"><table><tr><th>Student</th><th>Amount</th><th>Date</th></tr>
+${fees.map(f=>`<tr><td>${f.name}</td><td>₹${f.amount}</td><td>${f.date}</td></tr>`).join('')}</table></div>`;
+}
+
+if(page==='results'){
+c.innerHTML=`
+<div class="card"><h2>📝 Examination & Results</h2>
+<select id="rstudent">${students.map((s,i)=>`<option value="${i}">${s.name}</option>`).join('')}</select>
+<input id="subject" placeholder="Subject">
+<input id="marks" type="number" placeholder="Marks">
+<button class="green" onclick="addResult()">Save Result</button>
+<button onclick="window.print()">🖨️ Print / PDF</button>
+</div>
+<div class="card"><table><tr><th>Student</th><th>Subject</th><th>Marks</th></tr>
+${results.map(r=>`<tr><td>${r.name}</td><td>${r.subject}</td><td>${r.marks}</td></tr>`).join('')}</table></div>`;
+}
+
+if(page==='notices'){
+c.innerHTML=`
+<div class="card"><h2>📢 Notice Board</h2>
+<input id="notice" placeholder="Write school notice">
+<button class="green" onclick="addNotice()">Publish Notice</button>
+</div>
+<div class="card">${notices.map((n,i)=>`<p><b>📢 ${n}</b> <button class="danger" onclick="delNotice(${i})">Delete</button></p>`).join('')}</div>`;
+}
+
+if(page==='reports'){
+c.innerHTML=`
+<div class="card"><h2>📊 Reports</h2>
+<div class="grid">
+<div><h3>Total Students</h3><div class="stat">${students.length}</div></div>
+<div><h3>Total Staff</h3><div class="stat">${staff.length}</div></div>
+<div><h3>Total Fees</h3><div class="stat">₹${fees.reduce((a,b)=>a+Number(b.amount),0)}</div></div>
+<div><h3>Results</h3><div class="stat">${results.length}</div></div>
+</div>
+<button onclick="window.print()">🖨️ Print / Save PDF</button>
+</div>`;
+}
+
+
+if(page==='principal'){
+c.innerHTML=`
+<div class="card">
+<h2>👤 Principal Profile</h2>
+<div class="grid">
+<input id="pname" placeholder="Principal Name">
+<input id="pmobile" placeholder="Mobile Number">
+<input id="pemail" placeholder="Email">
+<input id="pschool" placeholder="School Name">
+<input id="paddress" placeholder="School Address">
+<input id="pphoto" placeholder="Profile Photo URL">
+</div>
+<button class="green" onclick="savePrincipal()">💾 Save Profile</button>
+</div>
+<div class="card">
+<h3>Current Profile</h3>
+<p><b>Name:</b> <span id="showPName"></span></p>
+<p><b>Mobile:</b> <span id="showPMobile"></span></p>
+<p><b>Email:</b> <span id="showPEmail"></span></p>
+<p><b>School:</b> <span id="showPSchool"></span></p>
+<p><b>Address:</b> <span id="showPAddress"></span></p>
+</div>`;
+
+let pr=JSON.parse(localStorage.principalProfile||'{}');
+pname.value=pr.name||'';
+pmobile.value=pr.mobile||'';
+pemail.value=pr.email||'';
+pschool.value=pr.school||'S.J EDUCATION CENTRE';
+paddress.value=pr.address||'';
+pphoto.value=pr.photo||'';
+
+showPName.textContent=pr.name||'Not set';
+showPMobile.textContent=pr.mobile||'Not set';
+showPEmail.textContent=pr.email||'Not set';
+showPSchool.textContent=pr.school||'S.J EDUCATION CENTRE';
+showPAddress.textContent=pr.address||'Not set';
+}
+
+if(page==='settings'){
+c.innerHTML=`
+<div class="card"><h2>⚙️ Principal Settings</h2>
+<p><b>Principal ID:</b> principal</p>
+<p><b>Default Password:</b> admin123</p>
+<p>All data is automatically saved in this browser.</p>
+<button class="danger" onclick="clearAll()">⚠️ Delete All Data</button>
+</div>`;
+}
+}
+
+function addStudent(){
+if(!sn.value)return alert('Student name required');
+students.push({name:sn.value,roll:roll.value,cls:cls.value,father:father.value,phone:phone.value});
+save();show('students');
+}
+function delStudent(i){students.splice(i,1);save();show('students')}
+function addStaff(){
+if(!stname.value)return alert('Staff name required');
+staff.push({name:stname.value,role:role.value,id:stid.value,pass:stpass.value});
+save();show('staff');
+}
+function delStaff(i){staff.splice(i,1);save();show('staff')}
+function markAttendance(){
+let s=students[astudent.value];
+if(!s)return alert('Add students first');
+attendance.push({date:adate.value||new Date().toISOString().slice(0,10),name:s.name,status:astatus.value});
+save();show('attendance');
+}
+function addFee(){
+let s=students[fstudent.value];if(!s)return alert('Add students first');
+fees.push({name:s.name,amount:amount.value,date:fdate.value||new Date().toISOString().slice(0,10)});
+save();show('fees');
+}
+function addResult(){
+let s=students[rstudent.value];if(!s)return alert('Add students first');
+results.push({name:s.name,subject:subject.value,marks:marks.value});
+save();show('results');
+}
+function addNotice(){
+if(!notice.value)return;
+notices.push(notice.value);save();show('notices');
+}
+function delNotice(i){notices.splice(i,1);save();show('notices')}
+function clearAll(){
+if(confirm('Delete all school data?')){
+students=[];staff=[];fees=[];results=[];attendance=[];notices=[];save();show('dashboard');
+}}
+function downloadStudents(){
+let csv='Name,Roll,Class,Father,Mobile\n'+students.map(s=>`${s.name},${s.roll},${s.cls},${s.father},${s.phone}`).join('\n');
+let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='students.csv';a.click();
+}
+function importStudents(){
+let input=document.createElement('input');
+input.type='file';
+input.accept='.xlsx,.xls,.csv';
+input.onchange=()=>{
+let file=input.files[0];
+if(!file)return;
+
+let reader=new FileReader();
+
+reader.onload=function(e){
+try{
+let data=new Uint8Array(e.target.result);
+let workbook=XLSX.read(data,{type:'array'});
+let sheet=workbook.Sheets[workbook.SheetNames[0]];
+let rows=XLSX.utils.sheet_to_json(sheet,{defval:''});
+
+let added=0;
+
+rows.forEach(r=>{
+let name=r['Name']||r['Student Name']||r['Student']||r['नाम'];
+if(!name)return;
+
+students.push({
+name:String(name),
+roll:String(r['Roll']||r['Roll No']||r['Roll Number']||''),
+cls:String(r['Class']||r['Class Name']||r['कक्षा']||''),
+father:String(r['Father']||r['Father Name']||r['FatherName']||''),
+phone:String(r['Mobile']||r['Mobile Number']||r['Phone']||'')
+});
+added++;
+});
+
+save();
+alert(added+' Students Imported Successfully');
+show('students');
+
+}catch(err){
+alert('Excel file read nahi ho paayi. Please check the columns.');
+console.error(err);
+}
+};
+
+reader.readAsArrayBuffer(file);
+};
+input.click();
+}
+if(localStorage.getItem('schoolLoggedIn')==='true'){
+localStorage.setItem('schoolLoggedIn','true');
+localStorage.setItem('schoolLoggedIn','true');
+document.getElementById('login').classList.add('hidden');
+document.getElementById('app').classList.remove('hidden');
+show(localStorage.getItem('schoolPage')||'dashboard');
+}
+
+function savePrincipal(){
+let pr={
+name:pname.value,
+mobile:pmobile.value,
+email:pemail.value,
+school:pschool.value,
+address:paddress.value,
+photo:pphoto.value
+};
+localStorage.principalProfile=JSON.stringify(pr);
+alert('Principal Profile Updated Successfully');
+show('principal');
+}
+
+
+function exportClassExcel(){
+let selected=document.getElementById('exportClass').value;
+
+if(!selected){
+alert('Please select a class first');
+return;
+}
+
+let list=students.filter(s=>String(s.cls).trim()===String(selected).trim());
+
+if(list.length===0){
+alert('Is class ke students nahi mile');
+return;
+}
+
+let data=list.map((s,i)=>({
+"S.No":i+1,
+"Student Name":s.name,
+"Roll No":s.roll,
+"Class":s.cls,
+"Father Name":s.father,
+"Mobile":s.phone
+}));
+
+let ws=XLSX.utils.json_to_sheet(data);
+let wb=XLSX.utils.book_new();
+
+XLSX.utils.book_append_sheet(wb,ws,"Students");
+
+let safe=selected.replace(/[\/\\:*?"<>|]/g,"-");
+
+XLSX.writeFile(
+wb,
+"SJ_Education_Centre_Class_"+safe+".xlsx"
+);
+
+alert(list.length+' Students exported successfully');
+}
+
+function loadExportClasses(){
+let select=document.getElementById('exportClass');
+if(!select)return;
+
+let classes=[...new Set(
+students.map(s=>String(s.cls).trim()).filter(Boolean)
+)].sort();
+
+select.innerHTML='<option value="">Select Class</option>';
+
+classes.forEach(cl=>{
+let option=document.createElement('option');
+option.value=cl;
+option.textContent=cl;
+select.appendChild(option);
+});
+}
+
+</script>
+</body>
+</html>
