@@ -561,7 +561,157 @@ function printAdmitCard() {
     w.document.write(
       "<html><body style='margin:0;text-align:center'>" +
       "<img src='" + url + "' style='max-width:100%;'>" +
-      "</body></html>"
+      "
+<section id="ai-templates" style="margin:20px 0;padding:20px;background:#fff;border-radius:14px;box-shadow:0 2px 10px #ddd;">
+  <h2>🤖 Smart School Templates</h2>
+  <p>Ready-made professional templates</p>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;">
+
+    <button onclick="openTemplate('admit1')" style="padding:18px;border:0;border-radius:12px;">
+      🎫 Admit Card 1<br><b>Modern School</b>
+    </button>
+
+    <button onclick="openTemplate('admit2')" style="padding:18px;border:0;border-radius:12px;">
+      🎫 Admit Card 2<br><b>Exam Hall Ticket</b>
+    </button>
+
+    <button onclick="openTemplate('result1')" style="padding:18px;border:0;border-radius:12px;">
+      📊 Result 1<br><b>Annual Marksheet</b>
+    </button>
+
+    <button onclick="openTemplate('result2')" style="padding:18px;border:0;border-radius:12px;">
+      📊 Result 2<br><b>Progress Report</b>
+    </button>
+
+    <button onclick="openTemplate('result3')" style="padding:18px;border:0;border-radius:12px;">
+      🏆 Result 3<br><b>Final Result</b>
+    </button>
+
+  </div>
+
+  <div id="templatePreview" style="margin-top:20px;"></div>
+</section>
+
+<script>
+function openTemplate(type) {
+
+  let title = "";
+  let content = "";
+
+  if(type === "admit1") {
+    title = "🎫 S.J. EDUCATION CENTRE - ADMIT CARD";
+    content = `
+      <h2>${title}</h2>
+      <hr>
+      <p><b>Student Name:</b> __________________</p>
+      <p><b>Admission No:</b> __________________</p>
+      <p><b>Class:</b> ______ &nbsp; <b>Section:</b> ______</p>
+      <p><b>Exam:</b> __________________</p>
+      <p><b>Roll No:</b> __________________</p>
+      <br>
+      <p><b>Exam Date:</b> __________ &nbsp; <b>Time:</b> __________</p>
+      <br>
+      <p>Principal Signature: ______________</p>
+    `;
+  }
+
+  if(type === "admit2") {
+    title = "📝 EXAM HALL TICKET";
+    content = `
+      <h2>${title}</h2>
+      <h3>S.J. EDUCATION CENTRE</h3>
+      <hr>
+      <p><b>Name:</b> ______________________________</p>
+      <p><b>Class/Section:</b> __________</p>
+      <p><b>Roll Number:</b> __________</p>
+      <p><b>Registration No:</b> __________</p>
+      <p><b>Examination:</b> __________</p>
+      <hr>
+      <p><b>Subject:</b> __________ &nbsp; <b>Date:</b> __________</p>
+      <p><b>Time:</b> __________</p>
+      <br>
+      <p>Authorized Signature: ______________</p>
+    `;
+  }
+
+  if(type === "result1") {
+    title = "📊 ANNUAL RESULT / MARKSHEET";
+    content = `
+      <h2>${title}</h2>
+      <h3>S.J. EDUCATION CENTRE</h3>
+      <hr>
+      <p><b>Student:</b> ______________________________</p>
+      <p><b>Class:</b> ______ &nbsp; <b>Section:</b> ______ &nbsp; <b>Roll No:</b> ______</p>
+      <table border="1" width="100%" cellpadding="10">
+        <tr><th>Subject</th><th>Max Marks</th><th>Marks Obtained</th><th>Grade</th></tr>
+        <tr><td>English</td><td>100</td><td></td><td></td></tr>
+        <tr><td>Hindi</td><td>100</td><td></td><td></td></tr>
+        <tr><td>Mathematics</td><td>100</td><td></td><td></td></tr>
+        <tr><td>Science</td><td>100</td><td></td><td></td></tr>
+        <tr><td>Social Science</td><td>100</td><td></td><td></td></tr>
+      </table>
+      <p><b>Total:</b> ______ / 500</p>
+      <p><b>Percentage:</b> ______%</p>
+      <p><b>Result:</b> PASS / FAIL</p>
+    `;
+  }
+
+  if(type === "result2") {
+    title = "📚 STUDENT PROGRESS REPORT";
+    content = `
+      <h2>${title}</h2>
+      <h3>S.J. EDUCATION CENTRE</h3>
+      <hr>
+      <p><b>Student Name:</b> __________________</p>
+      <p><b>Class:</b> ______ &nbsp; <b>Section:</b> ______</p>
+      <p><b>Academic Session:</b> __________</p>
+      <hr>
+      <p><b>Academic Performance:</b> Excellent / Very Good / Good / Needs Improvement</p>
+      <p><b>Attendance:</b> ______%</p>
+      <p><b>Teacher's Remark:</b></p>
+      <div style="height:80px;border:1px solid #aaa;"></div>
+      <br>
+      <p>Class Teacher: __________ &nbsp; Principal: __________</p>
+    `;
+  }
+
+  if(type === "result3") {
+    title = "🏆 FINAL RESULT";
+    content = `
+      <h2>${title}</h2>
+      <h3>S.J. EDUCATION CENTRE</h3>
+      <hr>
+      <p><b>Student Name:</b> __________________</p>
+      <p><b>Admission No:</b> __________</p>
+      <p><b>Class & Section:</b> __________</p>
+      <table border="1" width="100%" cellpadding="10">
+        <tr><th>Subject</th><th>Marks</th><th>Grade</th></tr>
+        <tr><td>English</td><td></td><td></td></tr>
+        <tr><td>Hindi</td><td></td><td></td></tr>
+        <tr><td>Mathematics</td><td></td><td></td></tr>
+        <tr><td>Science</td><td></td><td></td></tr>
+        <tr><td>Social Science</td><td></td><td></td></tr>
+      </table>
+      <p><b>Overall Percentage:</b> ______%</p>
+      <p><b>Final Grade:</b> ______</p>
+      <p><b>Result:</b> PASSED</p>
+    `;
+  }
+
+  document.getElementById("templatePreview").innerHTML = `
+    <div style="padding:25px;border:2px solid #222;border-radius:12px;background:white;">
+      ${content}
+      <br>
+      <button onclick="window.print()" style="padding:12px 20px;border:0;border-radius:8px;">
+        🖨️ Print / Save PDF
+      </button>
+    </div>
+  `;
+}
+</script>
+
+</body></html>"
     );
     w.document.close();
     w.print();
