@@ -480,5 +480,115 @@ select.appendChild(option);
 }
 
 </script>
+
+<section id="result-tools" style="margin:20px 0;padding:20px;background:#fff;border-radius:12px;box-shadow:0 2px 10px #ddd;">
+  <h2>📊 Results Management</h2>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;">
+
+    <!-- Student Admit Card -->
+    <div style="padding:18px;border:1px solid #ddd;border-radius:12px;">
+      <h3>🎫 Student Admit Card</h3>
+      <input type="file" id="admitCardFile"
+             accept=".pdf,.jpg,.jpeg,.png"
+             onchange="handleResultFile(this,'admitCardStatus')">
+      <p id="admitCardStatus">No admit card selected.</p>
+      <button onclick="printAdmitCard()"
+              style="padding:10px 15px;border:0;border-radius:8px;">
+        🖨️ Print Admit Card
+      </button>
+    </div>
+
+    <!-- Upload Result Template -->
+    <div style="padding:18px;border:1px solid #ddd;border-radius:12px;">
+      <h3>📤 Upload Result Template</h3>
+      <input type="file" id="resultTemplateFile"
+             accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+             onchange="handleResultFile(this,'resultTemplateStatus')">
+      <p id="resultTemplateStatus">No result template selected.</p>
+      <button onclick="showUploadedResultTemplate()"
+              style="padding:10px 15px;border:0;border-radius:8px;">
+        👁️ View Template
+      </button>
+    </div>
+
+  </div>
+
+  <div id="resultUploadPreview" style="margin-top:20px;"></div>
+</section>
+
+<script>
+function handleResultFile(input, statusId) {
+  const file = input.files[0];
+  if (!file) return;
+
+  document.getElementById(statusId).innerHTML =
+    "✅ Selected: <b>" + file.name + "</b>";
+
+  const preview = document.getElementById("resultUploadPreview");
+
+  if (file.type.startsWith("image/")) {
+    const url = URL.createObjectURL(file);
+    preview.innerHTML =
+      "<h3>Preview</h3><img src='" + url +
+      "' style='max-width:100%;max-height:500px;border-radius:10px;'>";
+  } else if (file.type === "application/pdf") {
+    const url = URL.createObjectURL(file);
+    preview.innerHTML =
+      "<h3>PDF Preview</h3><iframe src='" + url +
+      "' style='width:100%;height:600px;border:1px solid #ddd;'></iframe>";
+  } else {
+    preview.innerHTML =
+      "<h3>✅ File Selected</h3><p>" + file.name +
+      "</p><p>Preview is not available for this file type.</p>";
+  }
+}
+
+function printAdmitCard() {
+  const file = document.getElementById("admitCardFile").files[0];
+
+  if (!file) {
+    alert("Please select an Admit Card first.");
+    return;
+  }
+
+  if (file.type === "application/pdf") {
+    const url = URL.createObjectURL(file);
+    window.open(url, "_blank");
+  } else if (file.type.startsWith("image/")) {
+    const url = URL.createObjectURL(file);
+    const w = window.open("");
+    w.document.write(
+      "<html><body style='margin:0;text-align:center'>" +
+      "<img src='" + url + "' style='max-width:100%;'>" +
+      "</body></html>"
+    );
+    w.document.close();
+    w.print();
+  } else {
+    alert("Please upload a PDF or image Admit Card.");
+  }
+}
+
+function showUploadedResultTemplate() {
+  const file = document.getElementById("resultTemplateFile").files[0];
+
+  if (!file) {
+    alert("Please upload a Result Template first.");
+    return;
+  }
+
+  const url = URL.createObjectURL(file);
+
+  if (file.type === "application/pdf") {
+    window.open(url, "_blank");
+  } else if (file.type.startsWith("image/")) {
+    window.open(url, "_blank");
+  } else {
+    alert("Template selected: " + file.name);
+  }
+}
+</script>
+
 </body>
 </html>
