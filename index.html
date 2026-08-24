@@ -711,6 +711,82 @@ function openTemplate(type) {
 }
 </script>
 
+
+<style id="hide-unwanted-school-options">
+/* Hide unwanted options everywhere */
+</style>
+
+<script id="remove-unwanted-school-options">
+(function () {
+
+  const blocked = [
+    "admit card",
+    "student admit card",
+    "upload result",
+    "result upload",
+    "upload result template",
+    "result template upload"
+  ];
+
+  function clean() {
+
+    document.querySelectorAll("button, a, label, option, li, [role='button'], .card, .menu-item").forEach(function(el) {
+
+      const text = (el.innerText || el.textContent || "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+
+      if (!text) return;
+
+      if (blocked.some(word => text === word || text.includes(word))) {
+
+        // Don't remove the main Results Templates section
+        if (el.closest("#sj-result-templates")) return;
+
+        el.remove();
+      }
+    });
+
+    // Remove input fields related to admit/result uploading
+    document.querySelectorAll("input, textarea").forEach(function(el) {
+
+      const value = (
+        (el.id || "") + " " +
+        (el.name || "") + " " +
+        (el.placeholder || "") + " " +
+        (el.getAttribute("accept") || "")
+      ).toLowerCase();
+
+      if (
+        value.includes("admit") ||
+        value.includes("resulttemplate") ||
+        value.includes("result-upload") ||
+        value.includes("upload-result")
+      ) {
+        const parent = el.closest("div, section, form");
+        if (parent && !parent.closest("#sj-result-templates")) {
+          parent.remove();
+        } else {
+          el.remove();
+        }
+      }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", clean);
+
+  // Also clean dynamically-created menus/cards
+  const observer = new MutationObserver(clean);
+
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
+
+})();
+</script>
+
 </body></html>"
     );
     w.document.close();
